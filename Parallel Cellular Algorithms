@@ -1,0 +1,37 @@
+import random  # Importing the random module
+
+# Initialize parameters
+num_cells = 100    # Number of cells
+grid_size = 100    # Grid size (1D array of 100 cells)
+iterations = 1000  # Number of iterations
+neighborhood_size = 1  # Number of neighbors (1D)
+
+# Initialize population (random positions)
+cells = [random.uniform(-10, 10) for _ in range(num_cells)]
+
+# Fitness function
+def fitness(x):
+    return x**2  # Minimizing x^2
+
+# Update function based on neighborhood
+def update_cell(cell_index, cells):
+    # Consider neighbors
+    left = max(0, cell_index - neighborhood_size)
+    right = min(num_cells - 1, cell_index + neighborhood_size)
+    
+    neighbors = cells[left:right+1]
+    
+    # Update cell position: a simple strategy is to move toward the best neighbor
+    best_neighbor = min(neighbors, key=fitness)
+    cells[cell_index] = best_neighbor + random.uniform(-0.1, 0.1)  # Random exploration around best neighbor
+
+# Run the algorithm for the defined number of iterations
+for _ in range(iterations):
+    # Parallel update of cells (could be parallelized in a real implementation)
+    for i in range(num_cells):
+        update_cell(i, cells)
+
+# Track the best solution
+best_cell = min(cells, key=fitness)
+print(f"Best solution found: {best_cell}, Fitness: {fitness(best_cell)}")
+ 
